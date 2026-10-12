@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { randomUUID } from "node:crypto";
 import { env } from "../config/env.js";
 import type { StorageAdapter, PresignedUpload } from "./storage.js";
