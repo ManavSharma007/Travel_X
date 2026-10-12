@@ -1,0 +1,46 @@
+# dependencies
+node_modules/
+**/node_modules/
+
+# env & secrets — NEVER commit
+.env
+**/.env
+.env.*
+**/.env.*
+!**/.env.example
+
+# builds / output
+dist/
+**/dist/
+.expo/
+**/.expo/
+web-build/
+
+# backups & scratch
+src_backup/
+**/src_backup/
+*.bak
+**/*.bak
+
+# uploads (local photo storage)
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# logs
+*.log
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# OS
+.DS_Store
+
+# patch staging folders (not part of the app)
+patches/
+
+# stray root-level leftovers (real code is in backend/ and mobile/)
+/package.json
+/package-lock.json
+/tsconfig.json
+/src/
+/node_modules/

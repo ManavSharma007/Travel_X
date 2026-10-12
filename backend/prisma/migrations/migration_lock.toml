@@ -1,0 +1,2 @@
+# This file is created by Prisma and should be committed.
+provider = "postgresql"

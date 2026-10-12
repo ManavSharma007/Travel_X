@@ -1,0 +1,32 @@
+{
+  "expo": {
+    "name": "Travel_X",
+    "slug": "travel-x",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "travelx",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "Travel_X uses your location to place pins on your travel map.",
+        "NSPhotoLibraryUsageDescription": "Travel_X needs access to your photos so you can add them to your travel logs.",
+        "NSCameraUsageDescription": "Travel_X needs camera access so you can photograph the places you visit."
+      }
+    },
+    "android": {
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "READ_MEDIA_IMAGES",
+        "CAMERA"
+      ]
+    },
+    "plugins": [
+      "expo-secure-store",
+      "expo-image-picker",
+      "expo-location"
+    ]
+  }
+}

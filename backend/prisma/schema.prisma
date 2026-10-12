@@ -1,0 +1,97 @@
+// Travel_X database schema
+// Postgres + PostGIS. The geospatial column on Place is added via raw SQL
+// migration (Prisma has no native geography type), then queried with raw SQL.
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [postgis]
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  username     String   @unique
+  passwordHash String   @map("password_hash")
+  displayName  String?  @map("display_name")
+  bio          String?
+  avatarUrl    String?  @map("avatar_url")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  visits Visit[]
+  wishlist WishlistItem[]
+
+  @@map("users")
+}
+
+model Place {
+  id        String   @id @default(uuid())
+  osmId     String?  @unique @map("osm_id")
+  name      String
+  locality  String?
+  country   String?
+  latitude  Float
+  longitude Float
+  createdAt DateTime @default(now()) @map("created_at")
+
+  visits Visit[]
+  wishlist WishlistItem[]
+
+  // NOTE: a `geom geometry(Point,4326)` column is added in a raw migration
+  // and kept in sync from latitude/longitude. Prisma ignores it.
+
+  @@map("places")
+}
+
+model Visit {
+  id          String    @id @default(uuid())
+  userId      String    @map("user_id")
+  placeId     String    @map("place_id")
+  note        String?
+  rating      Int?
+  visitedFrom DateTime? @map("visited_from") @db.Date
+  visitedTo   DateTime? @map("visited_to") @db.Date
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  user   User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  place  Place        @relation(fields: [placeId], references: [id])
+  photos VisitPhoto[]
+
+  @@index([userId, createdAt])
+  @@map("visits")
+}
+
+model VisitPhoto {
+  id         String   @id @default(uuid())
+  visitId    String   @map("visit_id")
+  storageKey String   @map("storage_key")
+  width      Int?
+  height     Int?
+  position   Int      @default(0)
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  visit Visit @relation(fields: [visitId], references: [id], onDelete: Cascade)
+
+  @@index([visitId])
+  @@map("visit_photos")
+}
+
+model WishlistItem {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  placeId   String   @map("place_id")
+  note      String?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  place Place @relation(fields: [placeId], references: [id])
+
+  @@unique([userId, placeId])
+  @@index([userId, createdAt])
+  @@map("wishlist_items")
+}
